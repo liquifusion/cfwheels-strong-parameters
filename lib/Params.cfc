@@ -12,12 +12,7 @@
 				loc.param = arguments.params[loc.key];
 
 				if (IsStruct(loc.param)) {
-					this[loc.key] = $createObjectFromRoot(
-						path="plugins/strongparameters/lib",
-						fileName="WeakParams",
-						method="init",
-						params=loc.param
-					);
+					this[loc.key] = CreateObject("component", "ProtectedParams").init(loc.param);
 				} else {
 					this[loc.key] = arguments.params[loc.key];
 				}
@@ -37,9 +32,8 @@
 					"The required key #local.key# could not be found in the params object."
 				);
 			}
-
-			return this;
 		</cfscript>
+		<cfreturn this>
 	</cffunction>
 
 	<cffunction name="permit" returntype="struct" hint="Returns struct filtered by `keys` passed in. Must call `require` before calling this to indicate which struct to work with." output="false">
@@ -77,21 +71,5 @@
 			}
 		</cfscript>
 		<cfreturn loc.rv>
-	</cffunction>
-
-	<cffunction name="$createObjectFromRoot" returntype="any" access="public" output="false">
-		<cfargument name="path" type="string" required="true">
-		<cfargument name="fileName" type="string" required="true">
-		<cfargument name="method" type="string" required="true">
-		<cfscript>
-			var rv = "";
-			var loc = {};
-			loc.returnVariable = "rv";
-			loc.method = arguments.method;
-			loc.component = ListChangeDelims(arguments.path, ".", "/") & "." & ListChangeDelims(arguments.fileName, ".", "/");
-			loc.argumentCollection = arguments;
-		</cfscript>
-		<cfinclude template="/root.cfm">
-		<cfreturn rv>
 	</cffunction>
 </cfcomponent>
